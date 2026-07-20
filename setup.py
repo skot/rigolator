@@ -3,10 +3,10 @@ from setuptools import setup
 APP = ['pyscoper.py']
 DATA_FILES = [] 
 OPTIONS = {
-    'argv_emulation': False,  # Changed from True to False
+    'argv_emulation': False,
+    'arch': 'arm64',
     'packages': ['PIL', 'tkinter'],
-    'excludes': ['setuptools', 'pkg_resources', 'packaging'],
-    'site_packages': True,
+    'site_packages': False,
     'iconfile': 'rigolator_icon.png',
     'plist': {
         'CFBundleName': 'Rigolator',
@@ -23,5 +23,4 @@ setup(
     app=APP,
     data_files=DATA_FILES,
     options={'py2app': OPTIONS},
-    setup_requires=['py2app'],
 )

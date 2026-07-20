@@ -13,7 +13,7 @@ A macOS GUI application for capturing screenshots from Rigol DS2102A oscilloscop
 
 ## Prerequisites
 
-- macOS (tested on macOS 14.0+)
+- Apple Silicon Mac running macOS 14.0+
 - Python 3.11 (required for proper tkinter support with py2app)
 - Rigol DS2102A oscilloscope connected to network
 - Oscilloscope configured to accept connections on port 5555
@@ -24,7 +24,17 @@ A macOS GUI application for capturing screenshots from Rigol DS2102A oscilloscop
 
 ```bash
 brew install python@3.11
+brew install python-tk@3.11
 ```
+
+On Apple Silicon, Homebrew and Python should be installed under `/opt/homebrew`.
+Verify the interpreter is native before creating the virtual environment:
+
+```bash
+/opt/homebrew/bin/python3.11 -c "import platform; print(platform.machine())"
+```
+
+The command should print `arm64`.
 
 ### 2. Clone or Download the Project
 
@@ -36,8 +46,8 @@ cd rigolator
 ### 3. Create a Virtual Environment
 
 ```bash
-python3.11 -m venv venv
-source venv/bin/activate
+/opt/homebrew/bin/python3.11 -m venv .venv-arm64
+source .venv-arm64/bin/activate
 ```
 
 ### 4. Install Dependencies
@@ -46,20 +56,12 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 5. Install Tkinter (if not already available)
-
-If you get tkinter import errors, install python-tk:
-
-```bash
-brew install python-tk@3.11
-```
-
 ## Building the Standalone App
 
 ### 1. Ensure Virtual Environment is Active
 
 ```bash
-source venv/bin/activate
+source .venv-arm64/bin/activate
 ```
 
 ### 2. Clean Previous Builds
@@ -73,6 +75,14 @@ rm -R build dist
 ```bash
 python3.11 setup.py py2app
 ```
+
+Confirm the resulting app is native Apple Silicon:
+
+```bash
+file dist/Rigolator.app/Contents/MacOS/Rigolator
+```
+
+The output should end with `arm64`.
 
 ### 4. Test the App
 
@@ -90,7 +100,7 @@ Or double-click `dist/Rigolator.app` in Finder.
 rigolator/
 ├── pyscoper.py          # Main application file
 ├── setup.py             # py2app configuration
-├── venv/                # Virtual environment
+├── .venv-arm64/         # Local Apple Silicon virtual environment
 ├── dist/                # Built application (after build)
 │   └── Rigolator.app     # Standalone macOS app
 └── build/               # Build artifacts
@@ -142,7 +152,7 @@ If you encounter build errors:
 To run the app directly from Python (for development):
 
 ```bash
-source venv/bin/activate
+source .venv-arm64/bin/activate
 python pyscoper.py
 ```
 
